@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body data-page="Home page">
+    <div>
+        Home
+    </div>
+    <div id="ingredient-select">
+        <label><input type="checkbox" value="ไข่ไก่"> ไข่ไก่</label>
+        <label><input type="checkbox" value="เนื้อหมู"> เนื้อหมู</label>
+        <label><input type="checkbox" value="กุ้งสด"> กุ้งสด</label>
+        <label><input type="checkbox" value="น้ำปลา"> น้ำปลา</label>
+        <label><input type="checkbox" value="พริกไทย"> พริกไทย</label>
+        <label><input type="checkbox" value="น้ำ"> น้ำ</label>
+        <label><input type="checkbox" value="น้ำมันพืช"> น้ำมันพืช</label>
+        <label><input type="checkbox" value="เนื้อไก่"> เนื้อไก่</label>
+        <label><input type="checkbox" value="พริกแกง"> พริกแกง</label>
+        <label><input type="checkbox" value="พริกขี้หนู"> พริกขี้หนู</label>
+        <label><input type="checkbox" value="มะนาว"> มะนาว</label>
+        <label><input type="checkbox" value="กะทิ"> กะทิ</label>
+        <label><input type="checkbox" value="หอมแดง"> หอมแดง</label>
+        <label><input type="checkbox" value="ซอสหอยนางรม"> ซอสหอยนางรม</label>
+        <label><input type="checkbox" value="ข้าวสวย"> ข้าวสวย</label>
+      </div>
+      
+      <br>
+      
+      <h3>วัตถุดิบที่เลือก:</h3>
+      <div id="selected-ingredients" style="margin-bottom: 10px; min-height: 40px; background: #f3f3f3; padding: 10px; border-radius: 6px;"></div>
+
+      
+      <button onclick="submitSearch()">🔍 ค้นหาเมนู</button>
+      <button onclick="resetSearch()">🔄 Reset Search</button>
+    <div id="Current_page"></div>
+    <div id="Menu"></div>
+    <div id="pagination"></div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+    const selectedDiv = document.getElementById("selected-ingredients");
+    let selectedIngredients = [];
+  
+    // ตรวจจับ checkbox เมื่อเปลี่ยนค่า
+    document.getElementById("ingredient-select").addEventListener("change", (e) => {
+      const value = e.target.value;
+      if (e.target.checked) {
+        if (!selectedIngredients.includes(value)) {
+          selectedIngredients.push(value);
+        }
+      } else {
+        selectedIngredients = selectedIngredients.filter(ing => ing !== value);
+      }
+      renderSelected();
+    });
+  
+    // แสดงวัตถุดิบที่เลือกไว้
+    function renderSelected() {
+      selectedDiv.innerHTML = selectedIngredients.map(ing => 
+        `<span style="margin-right: 8px; padding: 4px 10px; background-color: #dfe6e9; border-radius: 20px;">${ing}</span>`
+      ).join("");
+    }
+  
+    // ฟังก์ชันเมื่อกดค้นหา
+    function submitSearch() {
+      console.log("🔎 วัตถุดิบที่ต้องการค้นหา:", selectedIngredients);
+  
+      alert("คุณเลือกวัตถุดิบ: " + selectedIngredients.join(", "));
+      searchingredient(selectedIngredients);
+    }
+  </script>
