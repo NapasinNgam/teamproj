@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'root', // แก้ไขตามรหัสผ่านของคุณ
+  password: 'root', 
   database: 'csv_import_db'
 });
 
@@ -35,7 +35,7 @@ db.connect((err) => {
   }
 });
 
-// Multer storage settings
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, 'uploads'));
@@ -47,7 +47,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-let menuCounter = 1;  // ตัวนับเริ่มต้นที่ 1
+let menuCounter = 1;  
 
 app.post('/upload-csv', upload.single('file'), (req, res) => {
   const filePath = req.file.path;
@@ -56,30 +56,28 @@ app.post('/upload-csv', upload.single('file'), (req, res) => {
   fs.createReadStream(filePath)
     .pipe(csv())
     .on('data', (row) => {
-      // ลบ single quotes หรือ double quotes รอบๆ ชื่อฟิลด์
       const sanitizedRow = Object.keys(row).reduce((acc, key) => {
-        const cleanKey = key.replace(/^['"]+|['"]+$/g, '');  // ลบ single quotes หรือ double quotes รอบๆ key
+        const cleanKey = key.replace(/^['"]+|['"]+$/g, '');  
         acc[cleanKey] = row[key];
         return acc;
       }, {});
 
-      // สร้าง Menu_ID ใหม่ ถ้าไม่มีใน row
       let menuID = sanitizedRow.Menu_ID ? sanitizedRow.Menu_ID : `M${String(menuCounter).padStart(3, '0')}`;
       
-      // ถ้าใช้ตัวนับในกรณีไม่มี Menu_ID จาก CSV
+      
       if (!sanitizedRow.Menu_ID) {
-        menuCounter++;  // เพิ่มตัวนับขึ้นทุกครั้ง
+        menuCounter++; 
       }
 
-      // ตรวจสอบว่า Menu_ID มีค่าไหม ถ้าไม่มีให้แสดง error
+      
       if (!menuID) {
         console.error('❌ Missing Menu_ID in row:', sanitizedRow);
         return;
       }
 
-      // เพิ่มข้อมูลเข้า menus array
+      
       menus.push([
-        menuID, // ใช้ Menu_ID ใหม่หรือตามค่าเดิมจาก CSV
+        menuID, 
         sanitizedRow.Menu_name,
         sanitizedRow.Menu_ingredient,
         sanitizedRow.Ingredient_split,
@@ -88,7 +86,6 @@ app.post('/upload-csv', upload.single('file'), (req, res) => {
       ]);
     })
     .on('end', () => {
-      // ตรวจสอบว่ามีข้อมูลใน menus หรือไม่
       if (menus.length === 0) {
         console.error('❌ No valid data to insert.');
         return res.status(400).send('No valid data to insert.');
@@ -98,7 +95,7 @@ app.post('/upload-csv', upload.single('file'), (req, res) => {
         'INSERT INTO menus (' +
         'Menu_ID, Menu_name, Menu_ingredient,' +
         'Ingredient_split, Menu_process, Menu_TYPEID, ' +
-        ') VALUES ?'; // ชื่อฟิลด์ไม่ต้องใส่ single quotes
+        ') VALUES ?'; 
 
       db.query(query, [menus], (err, result) => {
         if (err) {
@@ -111,7 +108,7 @@ app.post('/upload-csv', upload.single('file'), (req, res) => {
 });
 
 
-// Get users API
+
 app.get('/users', (req, res) => {
   db.query('SELECT * FROM menus', (err, results) => {
     if (err) {
