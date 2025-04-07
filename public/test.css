@@ -60,6 +60,14 @@ nav {
     text-decoration: none;
 }
 
+/* ========= Current PAGE ========= */
+#Current_page {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #4A4F87;
+}
+
 /* ========= Sidebar ========= */
 #sidebar {
     width: 260px;
@@ -223,8 +231,7 @@ body.sidebar-closed #select-ingredients-text {
     color: white;
 }
 
-#search-btn,
-#reset-btn {
+#search-btn{
     width: 200px;
     padding: 12px;
     font-size: 16px;
@@ -233,6 +240,16 @@ body.sidebar-closed #select-ingredients-text {
     border-radius: 20px;
     transition: all 0.2s ease;
     margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+}
+
+#reset-btn {
+    width: 200px;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    transition: all 0.2s ease;
 }
 
 /* ========= Recipe Result ========= */
@@ -252,9 +269,12 @@ body.sidebar-closed #select-ingredients-text {
   
 .recipe-container {
     display: flex;
-    flex-direction: column; /* เปลี่ยนจาก row เป็น column เพื่อจัดเรียงเมนูในแต่ละกล่อง */
-    gap: 20px; /* เพิ่มระยะห่างระหว่างแต่ละกล่อง */
-    align-items: stretch; /* ทำให้แต่ละกล่องยืดขยายเต็มพื้นที่ */
+    flex-direction: column;
+    align-items: center; /* จัดให้อยู่กลางแนวนอน */
+    justify-content: center;
+    text-align: center; /* จัดข้อความให้อยู่กลางในบรรทัดเดียวกัน */
+    margin-top: 10px;
+    padding: 20px;
 }
 
 .recipe-card {
@@ -311,5 +331,32 @@ body.sidebar-closed #select-ingredients-text {
   
 .how-to-cook:hover {
     opacity: 0.9;
+    background: #667CA2;
+    color: #ddd;
+}
+
+/* ========= pagi ========= */
+#pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#pagination button {
+    background-color: #4A4F87;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#pagination button:hover {
+    background-color: #667CA2;
 }
   

@@ -58,8 +58,7 @@ async function displayMenu() {
         <div id="Current_page"></div>
             <div class="recipe-card">
             <div class="recipe-container">
-                <img id="recipe-image" src="" style="width:100%,borderRadius:10px,marginBottom:15px">
-                
+                <img id="recipe-image" src="${menu.img_link}" style="width:100%,borderRadius:10px,marginBottom:15px">
                     <p><strong>ชื่อเมนู :</strong> <span id="recipe-name">${menu.Menu_name}</span></p>
                     <p><strong>วัตถุดิบ :</strong> <span id="recipe-ingredients">${menu.Menu_ingredient}</span></p>
                     <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=${currentPage}&ingredients=${selectedIngredients.join(',')}">
@@ -105,6 +104,7 @@ function changePage(page) {
       Menu_ingredient: menu.Menu_ingredient.split(", "),
       Match_Ing: [],
       Missing_Ing: [],
+      img_link: menu.img_link,
       diff: null
     }));
   
@@ -163,8 +163,7 @@ function changePage(page) {
       let menu_info = `
             <div class="recipe-card">
             <div class="recipe-container">
-                <img id="recipe-image" src="" style="width:100%,borderRadius:10px,marginBottom:15px">
-                
+                <img id="recipe-image" src="${menu.img_link}" style="width:100%,borderRadius:10px,marginBottom:15px">
                     <p><strong>ชื่อเมนู :</strong> <span id="recipe-name">${menu.Menu_name}</span></p>
                     <p><strong>วัตถุดิบที่ขาด :</strong> <span id="recipe-ingredients">${menu.Missing_Ing}</span></p>
                     <p><strong>วัตถุดิบที่มี :</strong> <span id="recipe-ingredients">${menu.Match_Ing}</span></p>
@@ -236,7 +235,7 @@ async function fetchDataById() {
                   <div class="maincontent-con">
                       <div class="maincontent-info">
                           <div class="maincontent-img">
-                              <img src="https://your-image-source-url.com" alt="Tom Yum Goong">
+                              <img src="${data.img_link}" alt="Tom Yum Goong">
                           </div>
                           <div class="info">
                               <button class="addtobookmark" onclick="addtobookmark('${data.Menu_ID}')">Add to bookmark</button>
@@ -278,7 +277,7 @@ async function fetchDataById() {
               <div class="maincontent-con">
                   <div class="maincontent-info">
                       <div class="maincontent-img">
-                          <img src="https://your-image-source-url.com" alt="Tom Yum Goong">
+                          <img src="${data.img_link}" alt="Tom Yum Goong">
                       </div>
                       <div class="info">
                           <h1>${data.Menu_name}</h1>

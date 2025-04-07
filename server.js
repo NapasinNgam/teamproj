@@ -50,62 +50,52 @@ const upload = multer({ storage });
 let menuCounter = 1;  
 
 app.post('/upload-csv', upload.single('file'), (req, res) => {
-  const filePath = req.file.path;
-  const menus = [];
-
-  fs.createReadStream(filePath)
-    .pipe(csv())
-    .on('data', (row) => {
-      const sanitizedRow = Object.keys(row).reduce((acc, key) => {
-        const cleanKey = key.replace(/^['"]+|['"]+$/g, '');  
-        acc[cleanKey] = row[key];
-        return acc;
-      }, {});
-
-      let menuID = sanitizedRow.Menu_ID ? sanitizedRow.Menu_ID : `M${String(menuCounter).padStart(3, '0')}`;
-      
-      
-      if (!sanitizedRow.Menu_ID) {
-        menuCounter++; 
-      }
-
-      
-      if (!menuID) {
-        console.error('❌ Missing Menu_ID in row:', sanitizedRow);
-        return;
-      }
-
-      
-      menus.push([
-        menuID, 
-        sanitizedRow.Menu_name,
-        sanitizedRow.Menu_ingredient,
-        sanitizedRow.Ingredient_split,
-        sanitizedRow.Menu_process,
-        sanitizedRow.Menu_TYPEID
-      ]);
-    })
-    .on('end', () => {
-      if (menus.length === 0) {
-        console.error('❌ No valid data to insert.');
-        return res.status(400).send('No valid data to insert.');
-      }
-
-      const query = 
-        'INSERT INTO menus (' +
-        'Menu_ID, Menu_name, Menu_ingredient,' +
-        'Ingredient_split, Menu_process, Menu_TYPEID, ' +
-        ') VALUES ?'; 
-
-      db.query(query, [menus], (err, result) => {
-        if (err) {
-          console.error('❌ Insert Error:', err);
-          return res.status(500).send('Error inserting data');
+    const filePath = req.file.path;
+    const updates = []; // ✅ ต้องประกาศตรงนี้ก่อนใช้งาน
+  
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => {
+        const sanitizedRow = {};
+        for (let rawKey in row) {
+          const cleanKey = rawKey.replace(/^['"]+|['"]+$/g, '').trim();
+          sanitizedRow[cleanKey] = row[rawKey];
         }
-        res.send(`✅ Imported ${result.affectedRows} rows successfully`);
+  
+        // ✅ เก็บคู่ [img_link, Menu_ID] ถ้ามีทั้งสองค่า
+        if (sanitizedRow.Menu_ID && sanitizedRow.img_link) {
+          updates.push([sanitizedRow.img_link, sanitizedRow.Menu_ID]);
+        }
+      })
+      .on('end', () => {
+        if (updates.length === 0) {
+          return res.status(400).send('No valid data to update.');
+        }
+  
+        // ✅ อัปเดตทีละแถว
+        let updateCount = 0;
+        let errorCount = 0;
+  
+        updates.forEach(([img_link, Menu_ID]) => {
+          const query = 'UPDATE menus SET img_link = ? WHERE Menu_ID = ?';
+          db.query(query, [img_link, Menu_ID], (err, result) => {
+            if (err) {
+              console.error(`❌ Failed to update Menu_ID ${Menu_ID}:`, err);
+              errorCount++;
+            } else {
+              updateCount += result.affectedRows;
+            }
+  
+            // ✅ ส่ง response หลังทำครบทุกอัน
+            if (updateCount + errorCount === updates.length) {
+              res.send(`✅ Updated ${updateCount} rows, ❌ Failed: ${errorCount}`);
+            }
+          });
+        });
       });
-    });
-});
+  });
+  
+
 
 
 
