@@ -3,12 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="test.css">
     <title>Home</title>
 </head>
 <body data-page="Home page">
-    <div>
-        Home
-    </div>
+    <nav>
+        <div class="container">
+            <div class="nav-con">
+                <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
+                <ul class="menu">
+                    <li><a href="main.html">Home</a></li>
+                    <li><a href="#" id="menu-search">Select</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <aside id="sidebar">
+            <div id="ingredients-list">
+                <div class="ingredients-header">
+                    <h2 id="select-ingredients-text">Select Ingredients</h2>
+                    <button id="toggleSidebar">☰</button>
+                </div>
+        
+                <div id="ingredient-categories"></div>  <!-- ใช้ตรงนี้ในการสร้างหมวดหมู่และรายการ -->
+            </div>
+        </aside>
+
+        <section id="content">
+            <div id="selected-ingredients">
+                <h3>🍳 Your Ingredient Basket:</h3>
+                <div id="ingredient-select"></div>
+            </div>
+
+            <div id="search-section">
+                <button id="search-btn" onclick="submitSearch()">Search</button>
+                <button id="reset-btn" onclick="submitSearch()">Reset</button>
+            </div>
+
+            <div id="Current_page"></div>
+            <div id="recipe-result" style="display:block"></div>
+            <div id="pagination"></div>
+        </section>
+    </main>
+
+
+
+
     <div id="ingredient-select">
         <label><input type="checkbox" value="ไข่ไก่"> ไข่ไก่</label>
         <label><input type="checkbox" value="เนื้อหมู"> เนื้อหมู</label>
@@ -29,14 +73,8 @@
       
       <br>
       
-      <h3>วัตถุดิบที่เลือก:</h3>
-      <div id="selected-ingredients" style="margin-bottom: 10px; min-height: 40px; background: #f3f3f3; padding: 10px; border-radius: 6px;"></div>
 
-      
-      <button onclick="submitSearch()">🔍 ค้นหาเมนู</button>
-      <button onclick="resetSearch()">🔄 Reset Search</button>
-    <div id="Current_page"></div>
-    <div id="Menu"></div>
+    <div id="Menu" class="recipe-container"></div>
     <div id="pagination"></div>
 
     
@@ -45,6 +83,7 @@
 </html>
 
 <script>
+
     const selectedDiv = document.getElementById("selected-ingredients");
     let selectedIngredients = [];
   
@@ -75,4 +114,9 @@
       alert("คุณเลือกวัตถุดิบ: " + selectedIngredients.join(", "));
       searchingredient(selectedIngredients);
     }
+    const toggleSidebarBtn = document.getElementById("toggleSidebar");
+    // Sidebar toggle
+    toggleSidebarBtn.addEventListener("click", () => {
+        document.body.classList.toggle("sidebar-closed");
+    });
   </script>

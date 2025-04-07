@@ -1,0 +1,317 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8e8d4;
+}
+
+header {
+    background: #e9dfc1;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+nav {
+    padding: 0.5rem;
+    background-color: #e8e4c8;
+    position: fixed; /* ทำให้แถบเมนูติดอยู่บนสุด */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #e9dfc1; /* ใส่สีพื้นหลังเพื่อให้แถบเมนูมองเห็นชัดเจน */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้แถบเมนูดูเด่น */
+    z-index: 1000;
+}
+
+.nav-con {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.logo a {
+    margin-left: -10rem;
+    font-size: 2rem;
+    color: #667ca2;
+    text-decoration: none;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    margin-right: -10rem;
+}
+
+.menu li {
+    margin: 0 1rem;
+}
+
+.menu li a {
+    color: #667ca2;
+    text-decoration: none;
+}
+
+/* ========= Sidebar ========= */
+#sidebar {
+    width: 260px;
+    top: 70px;
+    background: #4A4F87;
+    color: white;
+    padding: 15px;
+    position: fixed;
+    height: calc(100vh - 70px); /* ปรับความสูงให้เต็มหน้าจอลบด้วยแถบเมนู */
+    overflow-y: auto; /* ให้เลื่อนขึ้น-ลงได้ */
+    transition: transform 0.3s ease-in-out;
+}
+
+body.sidebar-closed #sidebar {
+    width: 60px;
+    overflow: hidden;
+}
+
+body.sidebar-closed #ingredients-list > *:not(.ingredients-header) {
+    display: none;
+}
+
+#toggleSidebar {
+    background: #4A4F87;
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s;
+}
+
+#toggleSidebar:hover {
+    background: #3f4475;
+}
+
+/* Ensure the toggle button stays visible even when sidebar is closed */
+body.sidebar-closed #toggleSidebar {
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+/* ========= Ingredient Section ========= */
+.ingredients-header {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin: 15px 0 10px;
+    color: #ffffff;
+}
+
+/* ========= Ingredient Category ========= */
+.ingredient-category {
+    background: white;
+    color: #3f3e78;
+    border-radius: 20px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column; /* ใช้ flex-direction เป็น column */
+    align-items: flex-start; /* จัดให้ชื่อหมวดหมู่อยู่ด้านซ้าย */
+    justify-content: flex-start; /* จัดให้รายการเช็คบ็อกซ์เริ่มต้นจากด้านบน */
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ingredient-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; /* ระยะห่างระหว่าง checkbox */
+    width: 100%;
+}
+
+.ingredient-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* เพิ่มระยะห่างระหว่าง checkbox และชื่อ */
+    font-size: 14px;
+    color: #444;
+    width: 100%; /* ให้ label มีความกว้างเต็ม */
+}
+
+/* ========= Main Content ========= */
+#content {
+    margin-left: 280px;
+    padding: 30px;
+    transition: margin-left 0.3s ease-in-out;
+    padding-top: 130px;
+    overflow-y: auto; /* เพิ่มให้สามารถเลื่อนลงได้ */
+}
+
+/* ถ้า sidebar ปิดให้ content ขยับซ้าย */
+body.sidebar-closed #content {
+    margin-left: 20px;
+}
+
+/* ========= Selected Ingredients ========= */
+#selected-ingredients {
+    background: #fbf8f5;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    width: 100%; /* กำหนดความกว้างให้ไม่เต็มจอ */
+    max-width: 800px; /* จำกัดความกว้างสูงสุด */
+    margin: 0 auto; /* จัดให้อยู่กลางหน้าจอ */
+}
+
+body.sidebar-closed #select-ingredients-text {
+    opacity: 0;
+}
+
+#selected-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.selected-item {
+    background: #ffffff;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.selected-item button {
+    background: none;
+    border: none;
+    color: #b22222;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ========= Search Section ========= */
+#search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* จัดให้อยู่กึ่งกลางแนวขวาง */
+    justify-content: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    height: 25vh; /* ให้เต็มหน้าจอ */
+    gap: 5px; /* เพิ่มช่องว่างระหว่างปุ่ม */
+}
+
+#search-btn {
+    background: #4b3934;
+    color: white;
+}
+
+#reset-btn {
+    background: #667ca2;
+    color: white;
+}
+
+#search-btn,
+#reset-btn {
+    width: 200px;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+}
+
+/* ========= Recipe Result ========= */
+#recipe-result {
+    padding: 30px;
+    border-radius: 15px;
+    margin: 30px auto;
+    width: 90%;
+    max-width: 750px;
+    min-height: 300px;
+    height: auto;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* เพิ่มระยะห่างระหว่างการ์ด */
+}
+  
+.recipe-container {
+    display: flex;
+    flex-direction: column; /* เปลี่ยนจาก row เป็น column เพื่อจัดเรียงเมนูในแต่ละกล่อง */
+    gap: 20px; /* เพิ่มระยะห่างระหว่างแต่ละกล่อง */
+    align-items: stretch; /* ทำให้แต่ละกล่องยืดขยายเต็มพื้นที่ */
+}
+
+.recipe-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* จัดตำแหน่งให้มีระยะห่างที่เหมาะสม */
+    height: 100%; /* หรือระบุความสูงที่ต้องการ */
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* เพิ่มเงา */
+    border: none; /* ลบกรอบนอก */
+    transition: transform 0.3s ease; /* เพิ่มการเปลี่ยนแปลงแบบราบรื่น */
+    margin-bottom: 20px; /* เพิ่มระยะห่างระหว่างการ์ด */
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px); /* เพิ่ม effect เมื่อเมาส์ hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* เพิ่มเงาเมื่อ hover */
+}
+
+#recipe-image {
+    width: 100%;              /* ใช้ความกว้างเต็มที่ของ container */
+    height: 200px;            /* ความสูงคงที่ */
+    object-fit: cover;        /* ให้รูปภาพเติมเต็มพื้นที่โดยไม่บิดเบือน */
+    border-radius: 10px;
+    background: #ccc;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* เงาให้กับรูปภาพ */
+}
+  
+.recipe-text {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+  
+.recipe-text p {
+    margin: 0;
+}
+  
+.how-to-cook {
+    background: #E8E4C8;
+    color: #667CA2;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 25px;
+    width: fit-content;
+    transition: opacity 0.3s;
+    margin-top: 20px; /* ปรับให้มีระยะห่างจากเนื้อหาข้างบน */
+    align-self: center; /* จัดให้อยู่กลาง */
+}
+  
+.how-to-cook:hover {
+    opacity: 0.9;
+}
+  

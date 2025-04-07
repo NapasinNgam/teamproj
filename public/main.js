@@ -161,19 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 
-    // Reset
-// Reset
-    resetBtn.addEventListener("click", () => {
-    selectedIngredients = [];
-    updateSelectedIngredients();
-    recipeResult.style.display = "none";
-    recipeResult.innerHTML = "";
-
-    // รีเซ็ตสถานะของ checkbox ทุกตัว
-    document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
-        checkbox.checked = false;  // รีเซ็ตสถานะของ checkbox
-    });
-});
 
 
     // Show recipes
@@ -220,15 +207,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 
-    const topMenuSearch = document.getElementById("menu-search");
-    const sidebar = document.getElementById("sidebar");
-    const content = document.getElementById("content");
-
-    if (topMenuSearch) {
-        topMenuSearch.addEventListener("click", (e) => {
-            e.preventDefault();
-            sidebar.style.display = "block";
-            content.style.display = "block";
-        });
-    }
 });

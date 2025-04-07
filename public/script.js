@@ -32,7 +32,7 @@ let currentPage = 1;
 const itemsPerPage = 5;
 
 async function displayMenu() {
-  const menuScreen = document.getElementById("Menu");
+  const menuScreen = document.getElementById("recipe-result");
   const pagination = document.getElementById("pagination");
   const page = document.getElementById("Current_page");
 
@@ -54,13 +54,19 @@ async function displayMenu() {
 
   currentPageMenu.forEach(menu => {
     const menu_info = `
-        </br>
-        <p>ชื่อเมนู: ${menu.Menu_name}</p>
-        <p>วัตถุดิบ: ${menu.Menu_ingredient}</p>
-        <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=${currentPage}&ingredients=${selectedIngredients.join(',')}">
-            <button>How to cook</button>
-        </a>
-        </br>
+        <div id="Current_page"></div>
+            <div class="recipe-card">
+            <div class="recipe-container">
+                <img id="recipe-image" src="" style="width:100%,borderRadius:10px,marginBottom:15px">
+                
+                    <p><strong>ชื่อเมนู :</strong> <span id="recipe-name">${menu.Menu_name}</span></p>
+                    <p><strong>วัตถุดิบ :</strong> <span id="recipe-ingredients">${menu.Menu_ingredient}</span></p>
+                    <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=${currentPage}&ingredients=${selectedIngredients.join(',')}">
+                        <button class="how-to-cook">How to cook</button>
+                    </a>
+                
+            </div>
+        </div>
     `;
     menuScreen.innerHTML += menu_info;
   });
