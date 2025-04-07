@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `bookmark`
+--
+
+DROP TABLE IF EXISTS `bookmark`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bookmark` (
+  `bm_id` int NOT NULL AUTO_INCREMENT,
+  `Menu_ID` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`bm_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bookmark`
+--
+
+LOCK TABLES `bookmark` WRITE;
+/*!40000 ALTER TABLE `bookmark` DISABLE KEYS */;
+INSERT INTO `bookmark` VALUES (2,'M015'),(6,'M010');
+/*!40000 ALTER TABLE `bookmark` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `menus`
 --
 
@@ -52,4 +76,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-06  4:55:06
+-- Dump completed on 2025-04-08  1:03:44

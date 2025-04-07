@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IngreDee</title>
+    <link rel="stylesheet" href="test.css">
+    <script defer src="main.js"></script>
+</head>
+<body>
+
+    <div id="randomMenu"></div>
+    
+    <nav>
+        <div class="container">
+            <div class="nav-con">
+                <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
+                <ul class="menu">
+                    <li><a href="main.html">Home</a></li>
+                    <li><a href="#" id="menu-search">Select</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <aside id="sidebar">
+            <div id="ingredients-list">
+                <div class="ingredients-header">
+                    <h2 id="select-ingredients-text">Select Ingredients</h2>
+                    <button id="toggleSidebar">☰</button>
+                </div>
+        
+                <div id="ingredient-categories"></div>  <!-- ใช้ตรงนี้ในการสร้างหมวดหมู่และรายการ -->
+            </div>
+        </aside>
+
+        <section id="content">
+            <div id="selected-ingredients">
+                <h3>🍳 Your Ingredient Basket:</h3>
+                <div id="selected-list"></div>
+            </div>
+
+            <div id="search-section">
+                <button id="search-btn">Search</button>
+                <button id="reset-btn">Reset</button>
+            </div>
+
+            <div id="recipe-result">
+                <div class="recipe-container">
+                      <img id="recipe-image" src="" alt="Recipe Image">
+                      <div class="recipe-text">
+                        <p><strong>Name :</strong> <span id="recipe-name">...</span></p>
+                        <p><strong>Ingredient :</strong> <span id="recipe-ingredients">...</span></p>
+                        <p><strong>Missing ingredient :</strong> <span id="recipe-missing">...</span></p>
+                        <button id="how-to-cook">How to cook</button>
+                      </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
