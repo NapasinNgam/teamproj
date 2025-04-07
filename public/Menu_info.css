@@ -61,22 +61,33 @@ nav {
     margin-bottom: 2rem;
 }
 
+/* การตั้งค่ากรอบสำหรับเมนูใน Bookmark */
+/* การตั้งค่ากรอบสำหรับเมนูใน Bookmark */
 .maincontent-info {
-    width: 100%;
-    background-color: #fff;
-    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
     border: 2px solid #ddd;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    background-color: #fff;
     box-shadow: 0 4px 8px rgba(31, 31, 31, 0.1);
+    position: relative;  /* เพิ่ม position relative เพื่อให้การตั้งค่าของ absolute ในปุ่มทำงาน */
 }
 
 .maincontent-info h1 {
     font-size: 32px;
     color: #4A4F87;
     margin-bottom: 10px;
+}
+
+/* ปรับให้ข้อมูลอยู่ในแนวตั้ง */
+.maincontent-info .info {
+    display: flex;
+    flex-direction: column; /* ทำให้ข้อมูลต่าง ๆ (ingredient, missing ingredient, button) อยู่ในแนวตั้ง */
+    gap: 10px; /* ช่องว่างระหว่างแต่ละรายการ */
+    align-items: flex-start; /* จัดให้ข้อมูลอยู่ทางซ้าย */
 }
 
 .maincontent-info .info p {
@@ -87,6 +98,35 @@ nav {
 
 .maincontent-info .info span {
     font-weight: bold;
+}
+
+/* สไตล์สำหรับปุ่ม "Add to bookmark" */
+.addtobookmark {
+    position: absolute;  /* ใช้ absolute positioning */
+    top: 20px;           /* ระยะห่างจากขอบบน */
+    right: 20px;         /* ระยะห่างจากขอบขวา */
+    background-color: #667ca2; /* พื้นหลังของปุ่ม */
+    color: white; /* สีของข้อความในปุ่ม */
+    padding: 5px 15px; /* ขนาดของปุ่ม */
+    margin-bottom: 10px;
+    border: none; /* ไม่มีกรอบ */
+    border-radius: 15px; /* มุมโค้งมน */
+    cursor: pointer; /* เปลี่ยนเคอร์เซอร์เป็นแบบ pointer เมื่อโฮเวอร์ */
+    font-size: 14px; /* ขนาดฟอนต์ */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* เพิ่มการเปลี่ยนแปลงเมื่อโฮเวอร์ */
+    box-shadow: 0 4px 8px rgba(31, 31, 31, 0.1); /* เพิ่มเงาใต้ปุ่ม */
+}
+
+/* ปุ่ม "Add to bookmark" เมื่อโฮเวอร์ */
+.addtobookmark:hover {
+    background-color: #4b6c9b; /* เปลี่ยนสีพื้นหลังเมื่อโฮเวอร์ */
+    transform: scale(1.05); /* ขยายปุ่มเล็กน้อย */
+}
+
+/* ปุ่ม "Add to bookmark" เมื่อกด */
+.addtobookmark:active {
+    background-color: #3a5d85; /* สีพื้นหลังเมื่อปุ่มถูกคลิก */
+    transform: scale(0.98); /* ลดขนาดปุ่มเล็กน้อยเมื่อคลิก */
 }
 
 .maincontent-img {
@@ -145,4 +185,87 @@ nav {
 .back-button:hover {
     background-color: #667ca2;
     color: #f5f2ef;
+}
+
+/* การตั้งค่ากรอบสำหรับการแสดงรายการ */
+#showbookmark {
+    display: flex;
+    flex-direction: column;  /* ตั้งค่าให้แสดงรายการในแนวตั้ง */
+    gap: 20px;  /* ช่องว่างระหว่างการ์ด */
+    align-items: center;  /* จัดให้รายการอยู่กลาง */
+    padding-top: 20px;
+}
+
+/* การตั้งค่ากรอบสำหรับเมนูใน Bookmark */
+.bookmark-card {
+    background-color: #fff;  /* พื้นหลังสีขาว */
+    border-radius: 10px;
+    border: 2px solid #ddd;  /* กรอบสีเทาอ่อน */
+    box-shadow: 0 4px 8px rgba(31, 31, 31, 0.1);  /* เงาใต้กรอบ */
+    padding: 20px;
+    width: 90%;  /* กำหนดขนาดการ์ดให้พอดีกับหน้าจอ */
+    max-width: 400px;  /* จำกัดความกว้างสูงสุด */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* เพิ่มการย่อขยายเมื่อ hover */
+.bookmark-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(31, 31, 31, 0.15);  /* เพิ่มเงาให้เด่นขึ้น */
+}
+
+/* สไตล์สำหรับชื่อเมนู */
+.bookmark-card h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* สไตล์สำหรับส่วนผสม */
+.bookmark-card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* การตั้งค่าปุ่ม "How to cook" และ "Delete Bookmark" */
+.bookmark-card .button-container {
+    display: flex;
+    justify-content: space-between; /* จัดตำแหน่งปุ่มให้ห่างกัน */
+    gap: 10px; /* ช่องว่างระหว่างปุ่ม */
+    margin-top: 10px;  /* เว้นช่องว่างจากเนื้อหาด้านบน */
+}
+
+/* ปุ่ม "How to cook" */
+.bookmark-card a button {
+    background-color: #667ca2;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+/* ปุ่ม "How to cook" เมื่อ hover */
+.bookmark-card a button:hover {
+    background-color: #4b6c9b;
+}
+
+/* ปุ่ม "Delete Bookmark" */
+.bookmark-card button.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ปุ่ม "Delete Bookmark" เมื่อ hover */
+.bookmark-card button.delete-btn:hover {
+    background-color: #c0392b;
 }

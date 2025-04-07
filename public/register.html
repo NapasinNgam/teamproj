@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register to IngreDee</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="container">
+        <div class="image-section">
+            <img src="./asset/green.jpg" alt="Dessert">
+        </div>
+        <div class="form-section">
+            <h2>Register to IngreDee 🥯</h2>
+            <form id="registerForm">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                
+                <div class="show-password">
+                    <input type="checkbox" id="showPassword">
+                    <label for="showPassword">Show password</label>
+                </div>
+                
+                <button type="submit" class="register-btn">Register</button>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <button type="button" class="google-btn">
+                    <img src="./asset/googleloco.png" alt="Google"> Register with GOOGLE
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="register.js"></script>
+</body>
+</html>

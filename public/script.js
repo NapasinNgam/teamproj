@@ -5,7 +5,7 @@ let isSearching = false;
 window.onload = function () {
     const page = document.body.getAttribute("data-page");
     const urlParams = new URLSearchParams(window.location.search);
-    
+  
     if (page === "Home page") {
       const ingredientsParam = urlParams.get('ingredients');
       const pageParam = parseInt(urlParams.get('page'));
@@ -14,7 +14,7 @@ window.onload = function () {
         selectedIngredients = ingredientsParam.split(',');
         currentPage = pageParam || 1;
         isSearching = true;
-        renderSelected();
+  
         searchingredient(selectedIngredients);
       } else {
         displayMenu();
@@ -22,10 +22,11 @@ window.onload = function () {
     } else if (page === "Menu_info") {
       fetchDataById();
     } else if (page === "bookmark") {
-        console.log("Bookmark");
-        showbookmark();
+      console.log("Bookmark");
+      showbookmark();
     }
   }
+  
   
 
 let currentPage = 1;
@@ -81,6 +82,11 @@ async function displayMenu() {
 
 function changePage(page) {
     currentPage = page;
+    window.scrollTo({
+      top: 450,
+      behavior: 'smooth' 
+    });
+  
     if (isSearching) {
       displaySearchResults(); 
     } else {
@@ -140,7 +146,7 @@ function changePage(page) {
   
 
   function displaySearchResults() {
-    const menuScreen = document.getElementById("Menu");
+    const menuScreen = document.getElementById("recipe-result");
     const pagination = document.getElementById("pagination");
     const page = document.getElementById("Current_page");
 
@@ -155,14 +161,18 @@ function changePage(page) {
 
     currentPageMenu.forEach(menu => {
       let menu_info = `
-          </br>
-          <p>ชื่อเมนู: ${menu.Menu_name}</p>
-          <p>วัตถุดิบที่ขาด: ${menu.Missing_Ing}</p>
-          <p>วัตถุดิบที่มี: ${menu.Match_Ing}</p>
-          <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=${currentPage}&ingredients=${selectedIngredients.join(',')}&missing_ingredients=${encodeURIComponent(menu.Missing_Ing)}">
-            <button>How to cook</button>
-          </a>
-          </br>
+            <div class="recipe-card">
+            <div class="recipe-container">
+                <img id="recipe-image" src="" style="width:100%,borderRadius:10px,marginBottom:15px">
+                
+                    <p><strong>ชื่อเมนู :</strong> <span id="recipe-name">${menu.Menu_name}</span></p>
+                    <p><strong>วัตถุดิบที่ขาด :</strong> <span id="recipe-ingredients">${menu.Missing_Ing}</span></p>
+                    <p><strong>วัตถุดิบที่มี :</strong> <span id="recipe-ingredients">${menu.Match_Ing}</span></p>
+                    <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=${currentPage}&ingredients=${selectedIngredients.join(',')}&missing_ingredients=${encodeURIComponent(menu.Missing_Ing)}">
+            <button class="how-to-cook">How to cook</button>
+            </a>
+            </div>
+        </div>
       `;
 
       menuScreen.innerHTML += menu_info;
@@ -174,19 +184,26 @@ function changePage(page) {
 }
 
   
-  function resetSearch() {
+function resetSearch() {
     selectedIngredients = [];
     isSearching = false;
-    
-    renderSelected();
-    const checkboxes = document.querySelectorAll("#ingredient-select input[type='checkbox']");
+
+    // ✅ ล้าง checkbox ทั้งหมด
+    const checkboxes = document.querySelectorAll("#ingredient-categories input[type='checkbox']");
     checkboxes.forEach(checkbox => checkbox.checked = false);
+
+    // ✅ ล้างช่องแสดงวัตถุดิบที่เลือก
+    const selectedList = document.getElementById("selected-list");
+    selectedList.innerHTML = "";
+
+    alert("รีเซ็ท การเสิร์ชแล้ว");
+
     currentPage = 1;
-
     displayMenu();
-  }
+}
 
-  async function fetchDataById() {
+
+async function fetchDataById() {
     const urlParams = new URLSearchParams(window.location.search);
     const menuId = urlParams.get('menu_id');
     const missingIngredients = urlParams.get('missing_ingredients');
@@ -199,18 +216,18 @@ function changePage(page) {
       if(!missingIngredients) {
         document.body.innerHTML = `
           <nav>
-              <div class="container">
-                  <div class="nav-con">
-                      <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
-                      <ul class="menu">
-                          <li><a href="index.html">Home</a></li>
-                          <li><a href="bookmark.html">bookmark</a></li>
-                          <li><a href="#Login">Login</a></li>
-                          <li><a href="#Register">Register</a></li>
-                      </ul>
-                  </div>
-              </div>
-          </nav>
+        <div class="container">
+            <div class="nav-con">
+                <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
+                <ul class="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="bookmark.html" id="menu-search">Bookmark</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
           <button class="back-button" onclick="goBackToSearch()"> &lt; ย้อนกลับ </button>
 
@@ -241,18 +258,18 @@ function changePage(page) {
     } else {
       document.body.innerHTML = `
       <nav>
-          <div class="container">
-              <div class="nav-con">
-                  <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
-                  <ul class="menu">
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="bookmark.html">bookmark</a></li>
-                      <li><a href="#Login">Login</a></li>
-                      <li><a href="#Register">Register</a></li>
-                  </ul>
-              </div>
-          </div>
-      </nav>
+        <div class="container">
+            <div class="nav-con">
+                <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
+                <ul class="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="bookmark.html" id="menu-search">Bookmark</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
       <button class="back-button" onclick="goBackToSearch()"> &lt; ย้อนกลับ </button>
 
@@ -264,10 +281,10 @@ function changePage(page) {
                           <img src="https://your-image-source-url.com" alt="Tom Yum Goong">
                       </div>
                       <div class="info">
-                          <button class="addtobookmark" onclick="addtobookmark('${data.Menu_ID}')">Add to bookmark</button>
                           <h1>${data.Menu_name}</h1>
                           <p><span>Ingredient:</span> ${data.Ingredient_split}</p>
                           <p><span>Missing Ingredient:</span> ${missingIngredients}</p>
+                          <button class="addtobookmark" onclick="addtobookmark('${data.Menu_ID}')">Add to bookmark</button>
                       </div>
                   </div>
               </div>
@@ -308,7 +325,7 @@ function addtobookmark(menuId) {
     .catch(err => alert("เกิดข้อผิดพลาด: " + err));
 }
 
-  async function showbookmark() {
+async function showbookmark() {
 
     const res = await fetch('/showbookmark');
     const data = await res.json();
@@ -318,19 +335,23 @@ function addtobookmark(menuId) {
 
     data.forEach(menu => {
         const bookmark = `
-        </br>
-        <p>ชื่อเมนู: ${menu.Menu_name}</p>
-        <p>วัตถุดิบ: ${menu.Menu_ingredient}</p>
-        <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=bookmark">
+        <div class="bookmark-card">
+          <h3>${menu.Menu_name}</h3>
+          <p>วัตถุดิบ: ${menu.Menu_ingredient}</p>
+    
+          <!-- ปุ่ม "How to cook" และ "Delete Bookmark" -->
+          <div class="button-container">
+           <a href="/menu_info.html?menu_id=${menu.Menu_ID}&page=bookmark">
             <button>How to cook</button>
-        </a>
-        </br>
-        <button onclick='deletebookmark("${menu.Menu_ID}")'>Deleted Bookmark</button>
-        </br>
+           </a>
+           <button class="delete-btn" onclick='deletebookmark("${menu.Menu_ID}")'>Delete Bookmark</button>
+          </div>
+        </div>
         `;
         show.innerHTML += bookmark;
     });
 }
+
 
 function deletebookmark(Menu_ID) {
     console.log(Menu_ID);

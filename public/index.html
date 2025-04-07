@@ -12,15 +12,14 @@
             <div class="nav-con">
                 <div class="logo"><a href="#"><b>IngreDee🥯</b></a></div>
                 <ul class="menu">
-                    <li><a href="main.html">Home</a></li>
-                    <li><a href="#" id="menu-search">Select</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="bookmark.html" id="menu-search">Bookmark</a></li>
                     <li><a href="login.html">Login</a></li>
                     <li><a href="register.html">Register</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-
     <main>
         <aside id="sidebar">
             <div id="ingredients-list">
@@ -36,12 +35,12 @@
         <section id="content">
             <div id="selected-ingredients">
                 <h3>🍳 Your Ingredient Basket:</h3>
-                <div id="ingredient-select"></div>
+                <div id="selected-list"></div>
             </div>
 
             <div id="search-section">
                 <button id="search-btn" onclick="submitSearch()">Search</button>
-                <button id="reset-btn" onclick="submitSearch()">Reset</button>
+                <button id="reset-btn" onclick="resetSearch()">Reset</button>
             </div>
 
             <div id="Current_page"></div>
@@ -50,31 +49,6 @@
         </section>
     </main>
 
-
-
-
-    <div id="ingredient-select">
-        <label><input type="checkbox" value="ไข่ไก่"> ไข่ไก่</label>
-        <label><input type="checkbox" value="เนื้อหมู"> เนื้อหมู</label>
-        <label><input type="checkbox" value="กุ้งสด"> กุ้งสด</label>
-        <label><input type="checkbox" value="น้ำปลา"> น้ำปลา</label>
-        <label><input type="checkbox" value="พริกไทย"> พริกไทย</label>
-        <label><input type="checkbox" value="น้ำ"> น้ำ</label>
-        <label><input type="checkbox" value="น้ำมันพืช"> น้ำมันพืช</label>
-        <label><input type="checkbox" value="เนื้อไก่"> เนื้อไก่</label>
-        <label><input type="checkbox" value="พริกแกง"> พริกแกง</label>
-        <label><input type="checkbox" value="พริกขี้หนู"> พริกขี้หนู</label>
-        <label><input type="checkbox" value="มะนาว"> มะนาว</label>
-        <label><input type="checkbox" value="กะทิ"> กะทิ</label>
-        <label><input type="checkbox" value="หอมแดง"> หอมแดง</label>
-        <label><input type="checkbox" value="ซอสหอยนางรม"> ซอสหอยนางรม</label>
-        <label><input type="checkbox" value="ข้าวสวย"> ข้าวสวย</label>
-      </div>
-      
-      <br>
-      
-
-    <div id="Menu" class="recipe-container"></div>
     <div id="pagination"></div>
 
     
@@ -83,37 +57,171 @@
 </html>
 
 <script>
+let selectedIngredients = []; // ✅ ต้องย้ายมานอก window.addEventListener เพื่อให้ submitSearch() เข้าถึงได้
 
-    const selectedDiv = document.getElementById("selected-ingredients");
-    let selectedIngredients = [];
-  
-    // ตรวจจับ checkbox เมื่อเปลี่ยนค่า
-    document.getElementById("ingredient-select").addEventListener("change", (e) => {
-      const value = e.target.value;
-      if (e.target.checked) {
-        if (!selectedIngredients.includes(value)) {
-          selectedIngredients.push(value);
-        }
-      } else {
-        selectedIngredients = selectedIngredients.filter(ing => ing !== value);
-      }
-      renderSelected();
+
+// ✅ ย้ายฟังก์ชันนี้ออกมาไว้ตรงนี้ (global scope)
+function updateSelectedIngredients() {
+  const selectedList = document.getElementById("selected-list");
+  selectedList.innerHTML = "";
+
+  selectedIngredients.forEach(ingredient => {
+    const span = document.createElement("span");
+    span.textContent = ingredient;
+    span.classList.add("selected-item");
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "x";
+    removeBtn.addEventListener("click", () => {
+      selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+      updateSelectedIngredients();
     });
-  
-    // แสดงวัตถุดิบที่เลือกไว้
-    function renderSelected() {
-      selectedDiv.innerHTML = selectedIngredients.map(ing => 
-        `<span style="margin-right: 8px; padding: 4px 10px; background-color: #dfe6e9; border-radius: 20px;">${ing}</span>`
-      ).join("");
-    }
-  
-    // ฟังก์ชันเมื่อกดค้นหา
-    function submitSearch() {
-      console.log("🔎 วัตถุดิบที่ต้องการค้นหา:", selectedIngredients);
-  
-      alert("คุณเลือกวัตถุดิบ: " + selectedIngredients.join(", "));
+
+    span.appendChild(removeBtn);
+    selectedList.appendChild(span);
+  });
+}
+
+// ✅ ฟังก์ชัน onload ที่ใช้งานได้แล้ว
+window.onload = function () {
+  const page = document.body.getAttribute("data-page");
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (page === "Home page") {
+    const ingredientsParam = urlParams.get('ingredients');
+    const pageParam = parseInt(urlParams.get('page'));
+
+    if (ingredientsParam) {
+      selectedIngredients = ingredientsParam.split(',');
+      currentPage = pageParam || 1;
+      isSearching = true;
+
+      updateSelectedIngredients(); // ✅ จะเรียกใช้ได้แล้ว
       searchingredient(selectedIngredients);
+    } else {
+      displayMenu();
     }
+  } else if (page === "Menu_info") {
+    fetchDataById();
+  } else if (page === "bookmark") {
+    console.log("Bookmark");
+    showbookmark();
+  }
+};
+
+function submitSearch() {
+    if (selectedIngredients.length === 0) {
+        alert("กรุณาเลือกวัตถุดิบก่อนค้นหา");
+        return;
+    }
+    const selectedString = selectedIngredients.join(", "); // แปลง array เป็น string
+
+    alert("ค้นหาด้วยวัตถุดิบ: " + selectedString);
+    
+    searchingredient(selectedIngredients); // ✅ ส่งค่าไปยังฟังก์ชัน
+}
+
+
+window.addEventListener("load", function () {
+    const selectedList = document.getElementById("selected-list");
+    const ingredientContainer = document.getElementById('ingredient-categories');
+
+    const ingredientCategories = {
+        "ผัก": ["กระเทียม", "กะหล่ำปลี", "ขึ้นฉ่าย", "ข่า", "คะน้า", "ตะไคร้", "ต้นหอม", "ถั่วงอก",
+            "ถั่วฝักยาว", "ผักกาดขาว", "ผักกาดดอง", "ผักชี", "ผักชีฝรั่ง", "ผักบุ้ง", "ผักโขม",
+            "มะเขือพวง", "มะเขือเทศ", "มะเขือเปราะ", "รากผักชี", "ลูกผักชี", "หอมเจียว", "หอมแขก",
+            "หอมแดง", "หอมใหญ่", "หัวไชเท้า", "เผือก", "แตงกวา", "แคร์รอต", "ใบกะเพรา", "ใบกุยช่าย",
+            "ใบมะกรูด", "ใบสะระแหน่", "ใบโหระพา"
+        ],
+        "ผลไม้": ["กล้วยน้ำว้า", "ข้าวโพด", "พริก", "พริกขี้หนู", "พริกขี้หนูสวน", "พริกจินดา",
+            "พริกชี้ฟ้า", "พริกผัด", "พริกหอม", "พริกแกง", "พริกแกงเขียวหวาน", "พริกแห้ง",
+            "พริกแห้งแดงจินดา", "มะนาว", "มะพร้าวทึนทึก", "มะม่วง", "มะละกอดิบ", "ลูกตาล",
+            "เนื้อมะพร้าว", "เนื้อมะพร้าวอ่อน", "แตงโม"
+        ],
+        "ผลิตภัณฑ์นมและไข่": ["นมข้นจืด", "นมข้นหวาน", "ไข่เป็ด", "ไข่ไก่"],
+        "เนื้อสัตว์": ["กระดูกหมู", "ขาหมู", "คอหมูย่าง", "น่องไก่", "ปีกไก่บน", "สันคอหมู", "หมูกรอบ",
+            "หมูสับ", "เนื้อสะโพกไก่", "เนื้อหมู", "เนื้อไก่"
+        ],
+        "ธัญพืช": ["งาขาว", "ถั่วดำ", "ถั่วทอง", "ถั่วลิสงคั่ว"],
+        "เห็ด": ["เห็ดฟาง", "เห็ดหอม"],
+        "อาหารทะเล": ["กุ้งสด", "กุ้งแห้ง", "ปลากระพง", "ปลาช่อนแดดเดียว", "ปลาหมึกกล้วย"],
+        "คาร์โบไฮเดรต": ["ข้าวสวย", "ข้าวเหนียว", "ข้าวเหนียวเขี้ยวงู", "วุ้นเส้น", "เส้นข้าวซอย", "เส้นจันท์",
+            "เส้นใหญ่", "แป้งข้าวเจ้า", "แป้งข้าวเหนียว", "แป้งถั่วเขียว", "แป้งท้าวยายม่อม", "แป้งมัน"
+        ],
+        "เครื่องปรุง": ["กะปิ", "ซอสปรุงรส", "ซอสปรุงรสฝาเขียว", "ซอสหอยนางรม", "ซีอิ้วดำหวาน",
+            "ซีอิ๊วขาว", "ซีอิ๊วดำ", "ซุปก้อน", "น้ำตาลทรายขาว", "น้ำตาลทรายแดง",
+            "น้ำตาลปี๊บ", "น้ำตาลมะพร้าว", "น้ำปลา", "น้ำผึ้ง", "น้ำพริกข้าวซอย",
+            "น้ำพริกเผา", "น้ำมะขามเปียก", "น้ำมะนาว", "น้ำสต๊อก", "น้ำเชื่อม", "น้ำแดง",
+            "ผงกะหรี่", "ผงชูรส", "ผงปรุงรส", "พริกป่น", "พริกไทย", "พริกไทยขาว",
+            "พริกไทยป่น", "พริกไทยเม็ด", "เกลือ"
+        ],
+        "อื่น ๆ": ["กระเทียมดอง", "กลิ่นสังเคราะห์กลิ่นมะลิ", "กะทิ", "ข้าวคั่ว", "ดอกมะลิ",
+            "น้ำ", "น้ำปูนใส", "น้ำมะพร้าวอ่อน", "น้ำมันพืช", "น้ำมันพืชสำหรับผัด",
+            "น้ำมันมะกอก", "น้ำแข็ง", "น้ำใบเตย", "ผงวุ้น", "สาคูต้น", "สีธรรมชาติ",
+            "หัวกะทิ", "อบเชย", "เต้าหู้แข็ง", "เต้าหู้ไข่", "โป๊ยกั๊ก", "ใบเตย", "ไชโป๊วเค็ม"
+        ]
+    };
+
+    function updateSelectedIngredients() {
+        selectedList.innerHTML = "";
+        selectedIngredients.forEach(ingredient => {
+            const span = document.createElement("span");
+            span.textContent = ingredient;
+            span.classList.add("selected-item");
+
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "x";
+            removeBtn.addEventListener("click", () => {
+                selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+                updateSelectedIngredients();
+            });
+
+            span.appendChild(removeBtn);
+            selectedList.appendChild(span);
+        });
+    }
+
+    for (const category in ingredientCategories) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.classList.add('ingredient-category');
+
+        const categoryHeader = document.createElement('div');
+        categoryHeader.classList.add('ingredients-header');
+        categoryHeader.textContent = category;
+
+        categoryDiv.appendChild(categoryHeader);
+
+        const checkboxesContainer = document.createElement('div');
+        checkboxesContainer.classList.add('ingredient-checkboxes');
+
+        ingredientCategories[category].forEach(ingredient => {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = ingredient;
+            checkbox.classList.add('ingredient-check');
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(ingredient));
+            checkboxesContainer.appendChild(label);
+
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    if (!selectedIngredients.includes(ingredient)) {
+                        selectedIngredients.push(ingredient);
+                    }
+                } else {
+                    selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+                }
+                updateSelectedIngredients();
+            });
+        });
+
+        categoryDiv.appendChild(checkboxesContainer);
+        ingredientContainer.appendChild(categoryDiv);
+    }
+});
+
     const toggleSidebarBtn = document.getElementById("toggleSidebar");
     // Sidebar toggle
     toggleSidebarBtn.addEventListener("click", () => {

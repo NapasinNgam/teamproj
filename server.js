@@ -166,7 +166,6 @@ app.get('/showbookmark', (req, res) => {
         if (err) {
             return res.status(500).send('Error');
         }
-        console.log(result);
         res.json(result);
     });
 });
