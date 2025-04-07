@@ -133,7 +133,6 @@ app.get('/menus', (req, res) => {
 
 app.get('/menu/:id', (req, res) => {
     const menuId = req.params.id;
-    console.log(menuId);
     db.query('SELECT * FROM menus WHERE Menu_ID = ?', [menuId], (err, results) => {
       if (err || results.length === 0) {
         return res.status(404).send('Not found');
@@ -141,7 +140,48 @@ app.get('/menu/:id', (req, res) => {
       res.json(results[0]);
     });
   });
-  
+
+app.get('/addbookmark/:id', (req, res) => {
+    const menuId = req.params.id;
+    console.log("Get ID",menuId);
+
+    db.query('SELECT * FROM bookmark WHERE Menu_ID = ?', [menuId], (err, result) => {
+        if (err) {
+            return res.status(500).send('Check error');
+        } else if (result.length === 0) {
+            db.query('INSERT INTO bookmark (Menu_ID) VALUES (?)', [menuId], (err) => {
+                if (err) {
+                    return res.status(500).send('Insert Error');
+                }
+                res.json("Insert Success");
+            });
+        } else {
+            res.json("Already bookmarked");
+        }
+    });
+});
+
+app.get('/showbookmark', (req, res) => {
+    db.query('SELECT * FROM bookmark, menus WHERE bookmark.Menu_ID = menus.Menu_ID', (err, result) => {
+        if (err) {
+            return res.status(500).send('Error');
+        }
+        console.log(result);
+        res.json(result);
+    });
+});
+
+app.get('/deletebookmark/:id', (req, res) => {
+    const menuId = req.params.id;
+    db.query('DELETE FROM bookmark WHERE Menu_ID = ?', [menuId] , (err, result) => {
+        if (err) {
+            return res.status(500).send('Error');
+        } else {
+            res.json("Delete Success");
+        }
+    });
+});
+
 
 
 
